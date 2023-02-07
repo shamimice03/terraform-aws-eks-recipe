@@ -19,14 +19,5 @@ module "prod_vpc" {
   enable_dns_support        = true
   enable_single_nat_gateway = false
 
-  tags = locals.common_tags
-
-}
-
-
-output "private_subnets" {
-  value = [
-       module.prod_vpc.private_subnet_id["ap-northeast-1a"].id,
-       module.prod_vpc.private_subnet_id["ap-northeast-1c"].id
-  ]
+  tags = local.common_tags
 }

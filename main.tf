@@ -1,3 +1,4 @@
+# Configure Role for EKS Master
 resource "aws_iam_role" "eks_master_role" {
   name = "${var.cluster_name}-eks-master-role"
 
@@ -26,8 +27,9 @@ resource "aws_iam_role_policy_attachment" "eks_master_role_AmazonEKSVPCResourceC
 
 ######################################################################
 
+# Configure Role for EKS Worker Nodes
 resource "aws_iam_role" "eks_nodegroup_role" {
-  name = "${var.cluster_name}-eks-master-role"
+  name = "${var.cluster_name}-eks-nodegroup-role"
 
   assume_role_policy = jsonencode({
     Statement = [{
@@ -64,7 +66,7 @@ resource "aws_eks_cluster" "eks_cluster" {
   version  = var.cluster_version
 
   vpc_config {
-    subnet_ids              = module.prod_vpc.public_subnets
+    subnet_ids              = module.prod_vpc.public_subnet_id
     endpoint_private_access = var.cluster_endpoint_private_access
     endpoint_public_access  = var.cluster_endpoint_public_access
     public_access_cidrs     = var.cluster_public_access_cidrs

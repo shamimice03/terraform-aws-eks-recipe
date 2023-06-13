@@ -59,9 +59,9 @@ resource "aws_iam_role_policy_attachment" "eks_nodegroup_role_AmazonEC2Container
 }
 
 ######################################################################
-
+# EKS Cluster 
 resource "aws_eks_cluster" "eks_cluster" {
-  name     = "${var.cluster_name}-${local.team}"
+  name     = "${var.cluster_name}-${local.environment}"
   role_arn = aws_iam_role.eks_master_role.arn
   version  = var.cluster_version
 
@@ -86,6 +86,100 @@ resource "aws_eks_cluster" "eks_cluster" {
   ]
 }
 
+
+######################################################################
+# EKS Nodegroup - public
+
+resource "aws_eks_node_group" "eks_ng_public" {
+  cluster_name = aws_eks_cluster.eks_cluster.name
+
+  node_group_name = "${var.cluster_name}-eks-ng-public"
+  node_role_arn   = aws_iam_role.eks_nodegroup_role.arn
+  subnet_ids      = module.prod_vpc.public_subnet_id
+
+  ami_type       = "AL2_x86_64"
+  capacity_type  = "ON_DEMAND"
+  disk_size      = 20
+  instance_types = ["t2.micro"]
+
+
+  # remote_access {
+  #   ec2_ssh_key = "eks-terraform-key"
+  # }
+
+  scaling_config {
+    desired_size = 1
+    min_size     = 1
+    max_size     = 2
+  }
+
+  # Desired max percentage of unavailable worker nodes during node group update.
+  update_config {
+    max_unavailable = 1
+  }
+
+  # Ensure that IAM Role permissions are created before and deleted after EKS Node Group handling.
+  # Otherwise, EKS will not be able to properly delete EC2 Instances and Elastic Network Interfaces.
+  depends_on = [
+    aws_iam_role_policy_attachment.eks_nodegroup_role_AmazonEKSWorkerNodePolicy,
+    aws_iam_role_policy_attachment.eks_nodegroup_role_AmazonEKS_CNI_Policy,
+    aws_iam_role_policy_attachment.eks_nodegroup_role_AmazonEC2ContainerRegistryReadOnly,
+  ]
+
+  tags = {
+    Name = "public-node-group"
+  }
+}
+
+
+
+######################################################################
+# EKS Nodegroup - private
+
+resource "aws_eks_node_group" "eks_ng_private" {
+  cluster_name = aws_eks_cluster.eks_cluster.name
+
+  node_group_name = "${var.cluster_name}-eks-ng-public"
+  node_role_arn   = aws_iam_role.eks_nodegroup_role.arn
+  subnet_ids      = module.prod_vpc.private_subnet_id
+
+  ami_type       = "AL2_x86_64"
+  capacity_type  = "ON_DEMAND"
+  disk_size      = 20
+  instance_types = ["t2.micro"]
+
+
+  # remote_access {
+  #   ec2_ssh_key = "eks-terraform-key"
+  # }
+
+  scaling_config {
+    desired_size = 1
+    min_size     = 1
+    max_size     = 2
+  }
+
+  # Desired max percentage of unavailable worker nodes during node group update.
+  update_config {
+    max_unavailable = 1
+  }
+
+  # Ensure that IAM Role permissions are created before and deleted after EKS Node Group handling.
+  # Otherwise, EKS will not be able to properly delete EC2 Instances and Elastic Network Interfaces.
+  depends_on = [
+    aws_iam_role_policy_attachment.eks_nodegroup_role_AmazonEKSWorkerNodePolicy,
+    aws_iam_role_policy_attachment.eks_nodegroup_role_AmazonEKS_CNI_Policy,
+    aws_iam_role_policy_attachment.eks_nodegroup_role_AmazonEC2ContainerRegistryReadOnly,
+  ]
+
+  tags = {
+    Name = "private-node-group"
+  }
+}
+
+
+
+# Outputs
 output "endpoint" {
   value = aws_eks_cluster.eks_cluster.endpoint
 }

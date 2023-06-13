@@ -11,6 +11,7 @@ Default output format [None]:
 ```
 
 ## To-do
+- [ ] Create Cluster First
 - [ ] Baston Host in Public Subnet so that we can ssh into eks_private_nodegroup instances.
 - [ ] EKS Cluster
   - EKS Cluster IAM Role

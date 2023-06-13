@@ -93,14 +93,14 @@ resource "aws_eks_cluster" "eks_cluster" {
 resource "aws_eks_node_group" "eks_ng_public" {
   cluster_name = aws_eks_cluster.eks_cluster.name
 
-  node_group_name = "${var.cluster_name}-eks-ng-public"
+  node_group_name = "${var.cluster_name}-${var.node_group_name_public}"
   node_role_arn   = aws_iam_role.eks_nodegroup_role.arn
   subnet_ids      = module.prod_vpc.public_subnet_id
 
-  ami_type       = "AL2_x86_64"
-  capacity_type  = "ON_DEMAND"
-  disk_size      = 20
-  instance_types = ["t2.micro"]
+  ami_type       = var.ami_type
+  capacity_type  = var.capacity_type
+  disk_size      = var.disk_size
+  instance_types = var.instance_types
 
 
   # remote_access {
@@ -108,14 +108,14 @@ resource "aws_eks_node_group" "eks_ng_public" {
   # }
 
   scaling_config {
-    desired_size = 1
-    min_size     = 1
-    max_size     = 2
+    desired_size = var.desired_size
+    min_size     = var.min_size
+    max_size     = var.max_size
   }
 
   # Desired max percentage of unavailable worker nodes during node group update.
   update_config {
-    max_unavailable = 1
+    max_unavailable = var.max_unavailable
   }
 
   # Ensure that IAM Role permissions are created before and deleted after EKS Node Group handling.
@@ -178,12 +178,3 @@ resource "aws_eks_node_group" "eks_ng_private" {
 }
 
 
-
-# Outputs
-output "endpoint" {
-  value = aws_eks_cluster.eks_cluster.endpoint
-}
-
-output "kubeconfig-certificate-authority-data" {
-  value = aws_eks_cluster.eks_cluster.certificate_authority[0].data
-}

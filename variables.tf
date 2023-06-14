@@ -53,7 +53,7 @@ variable "cluster_log_types" {
 variable "node_group_name_public" {
   description = "Name of the EKS node group"
   type        = string
-  default     = "eks-ng-public"
+  default     = "eks-ng-private"
 }
 
 variable "ami_type" {
@@ -83,19 +83,19 @@ variable "instance_types" {
 variable "desired_size" {
   description = "Desired number of instances in the EKS node group"
   type        = number
-  default     = 1
+  default     = 2
 }
 
 variable "min_size" {
   description = "Minimum number of instances in the EKS node group"
   type        = number
-  default     = 1
+  default     = 2
 }
 
 variable "max_size" {
   description = "Maximum number of instances in the EKS node group"
   type        = number
-  default     = 2
+  default     = 4
 }
 
 variable "max_unavailable" {

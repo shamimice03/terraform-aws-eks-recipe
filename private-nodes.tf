@@ -32,7 +32,7 @@ resource "aws_iam_role_policy_attachment" "eks_nodegroup_role_AmazonEC2Container
 }
 
 
-# ######################################################################
+#######################################################################
 # EKS Nodegroup - public
 
 resource "aws_eks_node_group" "eks_ng_public" {
@@ -76,10 +76,13 @@ resource "aws_eks_node_group" "eks_ng_public" {
   }
 }
 
+
+
+#### Private
 resource "aws_eks_node_group" "eks_ng_private" {
   cluster_name = aws_eks_cluster.eks_cluster.name
 
-  node_group_name = "${var.cluster_name}-${var.node_group_name_public}"
+  node_group_name = "${var.cluster_name}-${var.node_group_name_private}"
   node_role_arn   = aws_iam_role.eks_nodegroup_role.arn
   subnet_ids      = module.prod_vpc.private_subnet_id
 
@@ -117,7 +120,7 @@ resource "aws_eks_node_group" "eks_ng_private" {
   }
 }
 
-######################################################################
+########################################################################
 # EKS Nodegroup - private
 
 # resource "aws_eks_node_group" "eks_ng_private" {

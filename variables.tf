@@ -48,9 +48,16 @@ variable "cluster_log_types" {
     "scheduler"
   ]
 }
-
+###############################################################
 # Varible for EKS NodeGroup-Public
 variable "node_group_name_public" {
+  description = "Name of the EKS node group"
+  type        = string
+  default     = "eks-ng-public"
+}
+
+# Varible for EKS NodeGroup-Public
+variable "node_group_name_private" {
   description = "Name of the EKS node group"
   type        = string
   default     = "eks-ng-private"
@@ -83,19 +90,19 @@ variable "instance_types" {
 variable "desired_size" {
   description = "Desired number of instances in the EKS node group"
   type        = number
-  default     = 2
+  default     = 1
 }
 
 variable "min_size" {
   description = "Minimum number of instances in the EKS node group"
   type        = number
-  default     = 2
+  default     = 1
 }
 
 variable "max_size" {
   description = "Maximum number of instances in the EKS node group"
   type        = number
-  default     = 4
+  default     = 2
 }
 
 variable "max_unavailable" {

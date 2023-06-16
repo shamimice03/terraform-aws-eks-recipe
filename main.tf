@@ -21,6 +21,7 @@ module "vpc" {
   cidr     = var.vpc.vpc_cidr
 
   azs                 = var.vpc.azs
+  intra_subnet_cidr   = var.vpc.cluster_subnet_cidr
   public_subnet_cidr  = var.vpc.public_subnet_cidr
   private_subnet_cidr = var.vpc.private_subnet_cidr
 
@@ -66,7 +67,7 @@ resource "aws_iam_role_policy_attachment" "eks_master_role_AmazonEKSVPCResourceC
 # ######################################################################
 locals {
   # Can be change in future if cluster subnet can be private
-  new_cluster_subnets = module.vpc[0].public_subnet_id
+  new_cluster_subnets = module.vpc[0].intra_subnet_id
 }
 
 resource "aws_eks_cluster" "eks_cluster" {

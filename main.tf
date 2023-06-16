@@ -1,4 +1,40 @@
+locals {
+  name        = var.cluster_name
+  team        = var.team
+  environment = var.environment
+
+  common_tags = {
+    team        = local.team
+    environment = local.environment
+  }
+}
+
+######################################################################
+# Create New VPC
+######################################################################
+
+module "vpc" {
+  count  = var.create_new_vpc ? 1 : 0
+  source = "shamimice03/vpc/aws"
+
+  vpc_name = var.vpc.vpc_name
+  cidr     = var.vpc.vpc_cidr
+
+  azs                 = var.vpc.azs
+  public_subnet_cidr  = var.vpc.public_subnet_cidr
+  private_subnet_cidr = var.vpc.private_subnet_cidr
+
+  enable_dns_hostnames      = var.vpc.enable_dns_hostnames
+  enable_dns_support        = var.vpc.enable_dns_support
+  enable_single_nat_gateway = var.vpc.enable_single_nat_gateway
+
+  tags = local.common_tags
+}
+
+######################################################################
 # Configure Role for EKS Controlplane
+######################################################################
+
 resource "aws_iam_role" "eks_master_role" {
   name = "${var.cluster_name}-eks-master-role"
 
@@ -25,16 +61,21 @@ resource "aws_iam_role_policy_attachment" "eks_master_role_AmazonEKSVPCResourceC
 }
 
 
-######################################################################
+# ######################################################################
+# # EKS cluster configurations
+# ######################################################################
+locals {
+  # Can be change in future if cluster subnet can be private
+  new_cluster_subnets = module.vpc[0].public_subnet_id
+}
 
-# EKS Cluster 
 resource "aws_eks_cluster" "eks_cluster" {
-  name     = "${var.cluster_name}-${local.environment}"
+  name     = var.cluster_name
   role_arn = aws_iam_role.eks_master_role.arn
   version  = var.cluster_version
 
   vpc_config {
-    subnet_ids              = module.prod_vpc.public_subnet_id
+    subnet_ids              = coalesce(local.new_cluster_subnets, var.existing_cluster_subnets)
     endpoint_private_access = var.cluster_endpoint_private_access
     endpoint_public_access  = var.cluster_endpoint_public_access
     public_access_cidrs     = var.cluster_public_access_cidrs

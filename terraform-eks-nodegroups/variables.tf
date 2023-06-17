@@ -11,7 +11,7 @@ variable "cluster_name" {
   default     = ""
 }
 
-variable "subnets" {
+variable "subnet_ids" {
   description = "Name of the EKS cluster"
   type        = list(any)
   default     = []
@@ -67,7 +67,7 @@ variable "max_unavailable" {
 
 variable "tags" {
   description = "Node Group Tags"
-  type = map
+  type        = map(any)
   default = {
     Name = "EKS-Node-Group"
   }

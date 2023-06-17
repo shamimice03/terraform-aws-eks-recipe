@@ -1,7 +1,6 @@
 #######################################################################
 #      IAM Role for EKS nodegroups
 #######################################################################
-
 resource "aws_iam_role" "eks_nodegroup_role" {
   name = "${var.cluster_name}-eks-nodegroup-role"
 
@@ -34,7 +33,7 @@ resource "aws_iam_role_policy_attachment" "eks_nodegroup_role_AmazonEC2Container
 
 
 #######################################################################
-#      EKS Nodegroup
+#                               EKS Nodegroup                         #
 #######################################################################
 resource "aws_eks_node_group" "eks_nodegroup_public" {
   cluster_name    = var.cluster_name

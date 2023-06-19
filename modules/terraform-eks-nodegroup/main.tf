@@ -35,7 +35,7 @@ resource "aws_iam_role_policy_attachment" "eks_nodegroup_role_AmazonEC2Container
 #######################################################################
 #                               EKS Nodegroup                         #
 #######################################################################
-resource "aws_eks_node_group" "eks_nodegroup_public" {
+resource "aws_eks_node_group" "eks_nodegroup" {
   cluster_name    = var.cluster_name
   node_group_name = var.node_group_name
   node_role_arn   = aws_iam_role.eks_nodegroup_role.arn

@@ -2,7 +2,7 @@
 #      IAM Role for EKS nodegroups
 #######################################################################
 resource "aws_iam_role" "eks_nodegroup_role" {
-  name = "${var.cluster_name}-eks-nodegroup-role"
+  name = "${var.cluster_name}-${var.node_group_name}-role"
 
   assume_role_policy = jsonencode({
     Statement = [{

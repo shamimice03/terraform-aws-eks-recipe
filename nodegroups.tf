@@ -1,19 +1,19 @@
 module "eks_nodegroup" {
-
   source = "./modules/terraform-eks-nodegroup"
+
+  for_each        = var.node_groups
   cluster_name    = var.cluster_name
-  node_group_name = "kubecloud-eks-nodegroup"
-  subnet_ids      = ["subnet-021604cca828cfb0d", "subnet-06c70c11d9fbd5fd5"]
-  ami_type        = "AL2_x86_64"
-  capacity_type   = "ON_DEMAND"
-  disk_size       = 20
-  instance_types  = ["t2.micro"]
-  desired_size    = 2
-  min_size        = 2
-  max_size        = 4
-  max_unavailable = 1
-  tags = {
-    Name = "kubecloud-eks-nodegroup"
-  }
+  node_group_name = each.value.node_group_name
+  subnet_ids      = each.value.subnet_ids
+  ami_type        = each.value.ami_type
+  capacity_type   = each.value.capacity_type
+  disk_size       = each.value.disk_size
+  instance_types  = each.value.instance_types
+  desired_size    = each.value.desired_size
+  min_size        = each.value.min_size
+  max_size        = each.value.max_size
+  max_unavailable = each.value.max_unavailable
+  tags            = each.value.tags
+
 
 }

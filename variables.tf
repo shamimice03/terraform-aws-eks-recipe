@@ -200,3 +200,20 @@ variable "tags" {
     Name = "EKS-Node-Group"
   }
 }
+
+###### ++++ #####
+variable "node_groups" {
+  type = map(object({
+    node_group_name = string
+    subnet_ids      = list(string)
+    ami_type        = string
+    capacity_type   = string
+    disk_size       = number
+    instance_types  = list(string)
+    desired_size    = number
+    min_size        = number
+    max_size        = number
+    max_unavailable = number
+    tags            = map(string)
+  }))
+}

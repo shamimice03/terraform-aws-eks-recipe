@@ -6,12 +6,12 @@ terraform {
     }
   }
 
-  backend "s3" {
-    bucket = "kubecloud-eks-clusters"
-    key    = "kubecloud-nodegroups/nodegroup.tfstate"
-    region = "ap-northeast-1"
+  # backend "s3" {
+  #   bucket = "kubecloud-eks-clusters"
+  #   key    = "kubecloud-nodegroups/nodegroup.tfstate"
+  #   region = "ap-northeast-1"
 
-    # For State Locking
-    dynamodb_table = "kubecloud-eks-clusters"
-  }
+  #   # For State Locking
+  #   dynamodb_table = "kubecloud-eks-clusters"
+  # }
 }

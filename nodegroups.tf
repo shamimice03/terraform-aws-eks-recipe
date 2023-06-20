@@ -15,5 +15,7 @@ module "eks_nodegroup" {
   max_unavailable = each.value.max_unavailable
   tags            = each.value.tags
 
-
+  depends_on =[
+  aws_eks_cluster.eks_cluster
+  ]
 }

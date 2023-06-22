@@ -66,6 +66,7 @@ resource "aws_eks_node_group" "eks_nodegroup" {
     aws_iam_role_policy_attachment.eks_nodegroup_role_AmazonEKSWorkerNodePolicy,
     aws_iam_role_policy_attachment.eks_nodegroup_role_AmazonEKS_CNI_Policy,
     aws_iam_role_policy_attachment.eks_nodegroup_role_AmazonEC2ContainerRegistryReadOnly,
+    
   ]
 
   tags = var.tags

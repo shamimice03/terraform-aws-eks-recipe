@@ -104,7 +104,7 @@ module "eks_nodegroup" {
 module "eks_oidc" {
   source = "./modules/eks-oidc"
 
-  count        = var.enable_irsa ? 1 : 0
+  count        = var.attach_eks_oidc_with_iam ? 1 : 0
   cluster_name = var.cluster_name
 
   depends_on = [

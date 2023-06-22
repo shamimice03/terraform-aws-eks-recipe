@@ -6,7 +6,7 @@ cluster_endpoint_public_access  = true
 cluster_public_access_cidrs     = ["0.0.0.0/0"]
 cluster_service_ipv4_cidr       = "172.16.0.0/12"
 cluster_log_types               = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
-enable_irsa                     = true
+attach_eks_oidc_with_iam        = true
 
 # managed nodegroup
 node_groups = {

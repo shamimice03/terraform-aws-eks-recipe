@@ -58,8 +58,8 @@ variable "cluster_log_types" {
 }
 
 variable "tags" {
-  type = map(any)
-  default ={}
+  type    = map(any)
+  default = {}
 }
 
 ########################################################
@@ -86,7 +86,7 @@ variable "node_groups" {
 #       IAM Role for Service Account - IRSA
 ########################################################
 
-variable "enable_irsa" {
+variable "attach_eks_oidc_with_iam" {
   description = "This will add EKS OIDC endpoint Url in IAM Identity providers section"
   type        = bool
   default     = true

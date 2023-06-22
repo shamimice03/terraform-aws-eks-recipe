@@ -42,18 +42,13 @@ resource "aws_iam_role_policy_attachment" "eks_master_role_AmazonEKSVPCResourceC
 # ######################################################################
 # # EKS cluster configurations
 # ######################################################################
-locals {
-  # Can be change in future if cluster subnet can be private
-  new_cluster_subnets = try(module.vpc[0].intra_subnet_id, null)
-}
-
 resource "aws_eks_cluster" "eks_cluster" {
   name     = var.cluster_name
   role_arn = aws_iam_role.eks_master_role.arn
   version  = var.cluster_version
 
   vpc_config {
-    subnet_ids              = coalesce(local.new_cluster_subnets, var.existing_cluster_subnets)
+    subnet_ids              = var.cluster_subnets
     endpoint_private_access = var.cluster_endpoint_private_access
     endpoint_public_access  = var.cluster_endpoint_public_access
     public_access_cidrs     = var.cluster_public_access_cidrs
@@ -65,6 +60,9 @@ resource "aws_eks_cluster" "eks_cluster" {
 
   enabled_cluster_log_types = var.cluster_log_types
 
+
+  tags = merge(local.common_tags, { "Name" = var.cluster_name })
+
   # Ensure that IAM Role permissions are created before and deleted after EKS Cluster handling.
   # Otherwise, EKS will not be able to properly delete EKS managed EC2 infrastructure such as Security Groups.
   depends_on = [
@@ -73,4 +71,43 @@ resource "aws_eks_cluster" "eks_cluster" {
   ]
 }
 
+# ######################################################################
+# # EKS nodegroup configurations
+# ######################################################################
 
+module "eks_nodegroup" {
+  source = "./modules/terraform-eks-nodegroup"
+
+  for_each        = var.node_groups
+  cluster_name    = var.cluster_name
+  node_group_name = each.value.node_group_name
+  subnet_ids      = each.value.subnet_ids
+  ami_type        = each.value.ami_type
+  capacity_type   = each.value.capacity_type
+  disk_size       = each.value.disk_size
+  instance_types  = each.value.instance_types
+  desired_size    = each.value.desired_size
+  min_size        = each.value.min_size
+  max_size        = each.value.max_size
+  max_unavailable = each.value.max_unavailable
+  tags            = each.value.tags
+
+  depends_on = [
+    aws_eks_cluster.eks_cluster
+  ]
+}
+
+# ######################################################################
+# # EKS OIDC configurations
+# ######################################################################
+
+module "eks_oidc" {
+  source = "./modules/eks-oidc"
+
+  count        = var.enable_irsa ? 1 : 0
+  cluster_name = var.cluster_name
+
+  depends_on = [
+    aws_eks_cluster.eks_cluster
+  ]
+}

@@ -71,3 +71,24 @@ node_groups = {
 
 
 ```
+
+# Notes:
+
+
+## VPC
+
+If you want to create a new vpc where you will create EKS cluster, follow the link. 
+
+- Read about EKS VPC requirements
+
+## Test Cases
+
+- [ ] Create EKS Cluster with existing VPC
+- [ ] Create EKS Cluster with new VPC
+    - Create your VPC first
+    - Save the ID
+    - Intra VPC for X-ENI's
+
+- [ ]  Public and Private Endpoint Access = true
+
+- irsa: https://github.com/terraform-aws-modules/terraform-aws-iam/blob/v5.20.0/examples/iam-role-for-service-accounts-eks/main.tf

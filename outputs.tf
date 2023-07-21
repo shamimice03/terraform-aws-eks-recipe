@@ -25,6 +25,21 @@ output "version" {
   value       = aws_eks_cluster.eks_cluster.version
 }
 
+
+# AWS IAM OIDC Provider ARN
+output "aws_iam_openid_connect_provider_arn" {
+  description = "AWS IAM Open ID Connect Provider ARN"
+  value       = module.eks_oidc[0].aws_iam_openid_connect_provider_arn
+}
+
+# Output: AWS IAM Open ID Connect Provider
+output "oidc_provider" {
+  description = "AWS IAM Open ID Connect Provider extract from ARN"
+  value       = module.eks_oidc[0].oidc_provider
+}
+
+
+
 # output "vpc_public_subnets" {
 #   description = "The public subnets associated with the EKS cluster's node group."
 #   value       = module.vpc.public_subnet_id

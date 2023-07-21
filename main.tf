@@ -111,3 +111,5 @@ module "eks_oidc" {
     aws_eks_cluster.eks_cluster
   ]
 }
+
+

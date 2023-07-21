@@ -92,3 +92,9 @@ If you want to create a new vpc where you will create EKS cluster, follow the li
 - [ ]  Public and Private Endpoint Access = true
 
 - irsa: https://github.com/terraform-aws-modules/terraform-aws-iam/blob/v5.20.0/examples/iam-role-for-service-accounts-eks/main.tf
+
+***
+### To-Do
+- Integarte EKS CSI 
+- Create automated Storage Classs
+- Integarte Cluster AutoScaler

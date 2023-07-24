@@ -8,3 +8,9 @@ output "nodegroup_id" {
   value       = aws_eks_node_group.eks_nodegroup.id
 }
 
+output "nodegroup_role_arn" {
+  description = "ARN of the EKS Nodegroup Role"
+  value       = aws_iam_role.eks_nodegroup_role.name
+}
+
+

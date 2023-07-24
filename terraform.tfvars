@@ -1,4 +1,4 @@
-cluster_name                    = "kubecloud-eks-1"
+cluster_name                    = "kubecloud-eks-2"
 cluster_subnets                 = ["subnet-06e919d48f43eba1b", "subnet-0820c186039b2d4ac"]
 cluster_version                 = "1.27"
 cluster_endpoint_private_access = false
